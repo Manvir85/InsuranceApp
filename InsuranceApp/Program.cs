@@ -19,6 +19,7 @@ class Program
     }
     static void OneDevice()
     {
+        Console.WriteLine("░█░█░█▀▀░█░░░█▀▀░█▀█░█▄█░█▀▀░░░▀█▀░█▀█░░░▀█▀░█▀█░█▀▀░█░█░█▀▄░█▀█░█▀█░█▀▀░█▀▀\r\n░█▄█░█▀▀░█░░░█░░░█░█░█░█░█▀▀░░░░█░░█░█░░░░█░░█░█░▀▀█░█░█░█▀▄░█▀█░█░█░█░░░█▀▀\r\n░▀░▀░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀░░░░▀░░▀▀▀░░░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀░▀░▀░▀░▀░▀░▀▀▀░▀▀▀\r\n░█▀█░█▀█░█▀█                                                                \r\n░█▀█░█▀▀░█▀▀                                                                \r\n░▀░▀░▀░░░▀░░                                                                ");
         // Local Variables
 
         string deviceName;
@@ -48,9 +49,48 @@ class Program
         Console.WriteLine(categoryMenu);
         Console.ReadLine();
 
+        // Adds the user input to a counter for the appropriate category
+
+        if (categoryNumber == 1)
+        {
+            laptopCounter += numDevice;
+
+        }
+        else if (categoryNumber == 2)
+        {
+            desktopCounter += numDevice;
+
+        }
+        else
+        {
+            otherCounter += numDevice;
+
+        }
+
+        if (numDevice > 5)
+        {
+            deviceInsurance += 5 * deviceCost;
+
+            deviceInsurance += (numDevice - 5) * deviceCost * 0.9f;
+        }
+
+        else
+        {
+            deviceInsurance += numDevice * deviceCost;
+        }
+
+
+        Console.WriteLine("-----------------------------------------------\n");
+        // Display the Insurance Cost
+        Console.WriteLine($"{deviceName}");
+        Console.WriteLine($"Total cost for {numDevice} x {deviceName} is = {deviceInsurance:F2} (with insurance)");
 
 
     }
+
+
+
+    
 
 
 
