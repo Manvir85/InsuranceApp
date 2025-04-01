@@ -85,6 +85,22 @@ class Program
         Console.WriteLine($"{deviceName}");
         Console.WriteLine($"Total cost for {numDevice} x {deviceName} is = {deviceInsurance:F2} (with insurance)");
 
+        // Display depreciation
+        Console.WriteLine($"Depreciation over 6 months:\n");
+
+        for (int month = 1; month <= 6; month++)
+        {
+            deviceCost *= 0.95f; // 5% depreciation per month
+
+            Console.WriteLine($"Month: {month}\tValue Lost: {deviceCost:F2}\n");
+        }
+
+
+
+        Console.WriteLine($"CATEGORY: {CATEGORY[categoryNumber - 1]}");
+
+    }
+
 
     }
 
