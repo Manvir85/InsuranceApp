@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace InsuranceApp
 {
@@ -50,6 +51,7 @@ namespace InsuranceApp
         {
             string deviceName;
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+            Regex validNamePattern = new Regex(@"^[a-zA-Z0-9 ]+$");
 
             while (true)
             {
@@ -58,36 +60,39 @@ namespace InsuranceApp
 
                 if (!string.IsNullOrWhiteSpace(deviceName))
                 {
-                    // Capitalize each word, including those with numbers
-                    deviceName = textInfo.ToTitleCase(deviceName.ToLower());
-                    return deviceName;
+                    if (validNamePattern.IsMatch(deviceName))
+                    {
+                        // Capitalize each word, including those with numbers
+                        deviceName = textInfo.ToTitleCase(deviceName.ToLower());
+                        return deviceName;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: Device name can only contain letters, numbers, and spaces.");
+                    }
                 }
-
-                Console.WriteLine("Error: Device name cannot be empty.");
+                else
+                {
+                    Console.WriteLine("Error: Device name cannot be empty.");
+                }
             }
         }
 
+
+
         static void OneDevice()
         {
-            // Input the Device name
+            // Local Variables
             string deviceName = CheckName();
             string deviceCode = GenerateDeviceCode();
 
             int numDevice = CheckNumberofDevices();
 
-            float deviceCost = 0;
-            while (true)
-            {
-                Console.WriteLine("Enter the cost per device:");
-                if (float.TryParse(Console.ReadLine(), out deviceCost) && deviceCost > 0)
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Error: Please enter a valid positive number for cost.");
-                }
-            }
+
+            // Adds the user input to a counter for the appropriate category
+            if (category == 1) laptopCounter += numDevice;
+            else if (category == 2) desktopCounter += numDevice;
+            else otherCounter += numDevice;
 
             int category = 0;
             while (true)
@@ -107,11 +112,19 @@ namespace InsuranceApp
                 }
             }
 
-            // Adds the user input to a counter for the appropriate category
-            if (category == 1) laptopCounter += numDevice;
-            else if (category == 2) desktopCounter += numDevice;
-            else otherCounter += numDevice;
-
+            float deviceCost = 0;
+            while (true)
+            {
+                Console.WriteLine("Enter the cost per device:");
+                if (float.TryParse(Console.ReadLine(), out deviceCost) && deviceCost > 0)
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Error: Please enter a valid positive number for cost.");
+                }
+            }
             // Calculate insurance cost with discount
             float deviceInsurance = 0;
             if (numDevice > 5)
@@ -152,6 +165,8 @@ namespace InsuranceApp
 
         static void Main(string[] args)
         {
+            CATEGORY.AsReadOnly();
+
             string proceed = "";
             while (proceed.ToLower() != "x")
             {
@@ -167,4 +182,3 @@ namespace InsuranceApp
             Console.WriteLine($"The most expensive device - {mostExpensiveDevice}");
         }
     }
-}
