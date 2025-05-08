@@ -24,7 +24,7 @@ namespace InsuranceApp
         }
 
         // Method to check and get the number of devices from user input
-        static int CheckNumberofDevices()
+        static int CheckNumberOfDevices()
         {
             while (true)
             {
@@ -62,7 +62,6 @@ namespace InsuranceApp
                 {
                     if (validNamePattern.IsMatch(deviceName))
                     {
-                        // Capitalize each word, including those with numbers
                         deviceName = textInfo.ToTitleCase(deviceName.ToLower());
                         return deviceName;
                     }
@@ -78,22 +77,8 @@ namespace InsuranceApp
             }
         }
 
-
-
-        static void OneDevice()
+        static int CheckDeviceCategory()
         {
-            // Local Variables
-            string deviceName = CheckName();
-            string deviceCode = GenerateDeviceCode();
-
-            int numDevice = CheckNumberofDevices();
-
-
-            // Adds the user input to a counter for the appropriate category
-            if (category == 1) laptopCounter += numDevice;
-            else if (category == 2) desktopCounter += numDevice;
-            else otherCounter += numDevice;
-
             int category = 0;
             while (true)
             {
@@ -104,81 +89,87 @@ namespace InsuranceApp
                 }
                 if (int.TryParse(Console.ReadLine(), out category) && category >= 1 && category <= CATEGORY.Count)
                 {
-                    break;
+                    return category;
                 }
                 else
                 {
                     Console.WriteLine("Error: Please select a valid category number.");
                 }
             }
+        }
 
+        static float CheckDeviceCost()
+        {
             float deviceCost = 0;
             while (true)
             {
                 Console.WriteLine("Enter the cost per device:");
                 if (float.TryParse(Console.ReadLine(), out deviceCost) && deviceCost > 0)
                 {
-                    break;
+                    return deviceCost;
                 }
                 else
                 {
                     Console.WriteLine("Error: Please enter a valid positive number for cost.");
                 }
             }
-            // Calculate insurance cost with discount
-            float deviceInsurance = 0;
-            if (numDevice > 5)
-            {
-                deviceInsurance += 5 * deviceCost;
-                deviceInsurance += (numDevice - 5) * deviceCost * 0.9f;
-            }
-            else
-            {
-                deviceInsurance += numDevice * deviceCost;
-            }
+        }
 
+        static void OneDevice()
+        {
+            string deviceName = CheckName();
+            string deviceCode = GenerateDeviceCode();
+
+            int numDevice = CheckNumberOfDevices();
+            int category = CheckDeviceCategory();
+            float deviceCost = CheckDeviceCost();
+
+            if (category == 1) laptopCounter += numDevice;
+            else if (category == 2) desktopCounter += numDevice;
+            else otherCounter += numDevice;
+
+            float deviceInsurance = deviceCost * numDevice * 0.10f;
             totalInsuranceCost += deviceInsurance;
 
-            if (deviceInsurance > priciestDevice)
+            if (deviceCost > priciestDevice)
             {
-                priciestDevice = deviceInsurance;
-                mostExpensiveDevice = $"{deviceName} @ ${priciestDevice:F2}";
+                priciestDevice = deviceCost;
+                mostExpensiveDevice = deviceName;
             }
 
             Console.WriteLine("-----------------------------------------------");
-            // Display the Insurance Cost
             Console.WriteLine($"{deviceName} ({deviceCode})");
             Console.WriteLine($"Total cost for {numDevice} x {deviceName} is = ${deviceInsurance:F2} (with insurance)");
 
-            // Display depreciation
             Console.WriteLine("\nDepreciation over 6 months:");
-
             float depreciatedCost = deviceCost;
             for (int month = 1; month <= 6; month++)
             {
-                depreciatedCost *= 0.95f; // 5% depreciation per month
+                depreciatedCost *= 0.95f;
                 Console.WriteLine($"Month: {month}\tValue: ${depreciatedCost:F2}");
             }
 
-            Console.WriteLine($"CATEGORY: {CATEGORY[category - 1]}");
+            Console.WriteLine($"CATEGORY: {CATEGORY[category - 1]}\n");
         }
 
         static void Main(string[] args)
         {
-            CATEGORY.AsReadOnly();
-
             string proceed = "";
-            while (proceed.ToLower() != "x")
+            do
             {
                 OneDevice();
                 Console.WriteLine("Press Enter to add another device or type 'x' to finish.");
-                proceed = Console.ReadLine();
-            }
+                proceed = Console.ReadLine() ?? "";
+            } while (proceed.ToLower() != "x");
 
             Console.WriteLine($"\nThe number of laptops: {laptopCounter}");
             Console.WriteLine($"The number of desktops: {desktopCounter}");
             Console.WriteLine($"The number of other devices: {otherCounter}");
             Console.WriteLine($"\nThe total value for insurance: ${totalInsuranceCost:F2}");
             Console.WriteLine($"The most expensive device - {mostExpensiveDevice}");
+
+            Console.WriteLine("\nPress any key to exit.");
+            Console.ReadKey();
         }
     }
+}
