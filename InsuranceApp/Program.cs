@@ -7,19 +7,22 @@ namespace InsuranceApp
 {
     class Program
     {
+        // Importing Random for generating unique device codes
         static Random random = new Random();
 
-        // Global Variables
+        // Global Variables 
         static int laptopCounter = 0, desktopCounter = 0, otherCounter = 0;
-        static string mostExpensiveDevice = "";
-        static float totalInsuranceCost = 0, priciestDevice = 0;
+        static string mostExpensiveDevice = ""; 
+        static float totalInsuranceCost = 0, priciestDevice = 0; 
 
         // Constant Variables
         static List<string> CATEGORY = new List<string>() { "Laptop", "Desktop", "Other" };
 
+        // Methods and Functions
         // Method to generate a unique device code
         static string GenerateDeviceCode()
         {
+            // Generates a device code
             return $"DEV{random.Next(100, 999)}@{random.Next(10, 99)}";
         }
 
@@ -33,9 +36,10 @@ namespace InsuranceApp
                     Console.WriteLine("Enter the number of devices:");
                     int numDevice = Convert.ToInt32(Console.ReadLine());
 
+                    // Validating the number of devices
                     if (numDevice >= 1 && numDevice <= 450)
                     {
-                        return numDevice;
+                        return numDevice; // Return valid number of devices
                     }
 
                     Console.WriteLine("Error: Number of devices must be between 1 and 450.");
@@ -47,23 +51,26 @@ namespace InsuranceApp
             }
         }
 
+        // Method to check the name from the user input
         static string CheckName()
         {
             string deviceName;
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            Regex validNamePattern = new Regex(@"^[a-zA-Z0-9 ]+$");
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo; // For formatting the device name
+            Regex validNamePattern = new Regex(@"^[a-zA-Z0-9 ]+$"); 
 
             while (true)
             {
                 Console.WriteLine("Enter the device name:");
                 deviceName = Console.ReadLine();
 
+                // Validating the device name
                 if (!string.IsNullOrWhiteSpace(deviceName))
                 {
                     if (validNamePattern.IsMatch(deviceName))
                     {
+                        // Format the device name to title case
                         deviceName = textInfo.ToTitleCase(deviceName.ToLower());
-                        return deviceName;
+                        return deviceName; // Return valid device name
                     }
                     else
                     {
@@ -77,19 +84,22 @@ namespace InsuranceApp
             }
         }
 
+        // Method to check device category
         static int CheckDeviceCategory()
         {
             int category = 0;
             while (true)
             {
                 Console.WriteLine("Select the device category:");
+                // Displaying the available categories
                 for (int i = 0; i < CATEGORY.Count; i++)
                 {
                     Console.WriteLine($"{i + 1}. {CATEGORY[i]}");
                 }
+                // Validating the selected category
                 if (int.TryParse(Console.ReadLine(), out category) && category >= 1 && category <= CATEGORY.Count)
                 {
-                    return category;
+                    return category; // Return valid category
                 }
                 else
                 {
@@ -98,15 +108,17 @@ namespace InsuranceApp
             }
         }
 
+        // Method to check the cost of device
         static float CheckDeviceCost()
         {
             float deviceCost = 0;
             while (true)
             {
                 Console.WriteLine("Enter the cost per device:");
+                // Validating the device cost
                 if (float.TryParse(Console.ReadLine(), out deviceCost) && deviceCost > 0)
                 {
-                    return deviceCost;
+                    return deviceCost; // Return valid device cost
                 }
                 else
                 {
@@ -115,15 +127,18 @@ namespace InsuranceApp
             }
         }
 
+        // Method to handle the input and processing for one device
         static void OneDevice()
         {
-            string deviceName = CheckName();
-            string deviceCode = GenerateDeviceCode();
+            // Local variables 
+            string deviceName = CheckName(); // Get device name
+            string deviceCode = GenerateDeviceCode(); // Generate unique device code
 
-            int numDevice = CheckNumberOfDevices();
-            int category = CheckDeviceCategory();
-            float deviceCost = CheckDeviceCost();
+            int numDevice = CheckNumberOfDevices(); // Get number of devices
+            int category = CheckDeviceCategory(); // Get device category
+            float deviceCost = CheckDeviceCost(); // Get device cost
 
+            // Update counters based on the selected category
             if (category == 1) laptopCounter += numDevice;
             else if (category == 2) desktopCounter += numDevice;
             else otherCounter += numDevice;
@@ -152,6 +167,7 @@ namespace InsuranceApp
             Console.WriteLine($"CATEGORY: {CATEGORY[category - 1]}\n");
         }
 
+        // Display Summary
         static void Main(string[] args)
         {
             string proceed = "";
