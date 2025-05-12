@@ -15,8 +15,15 @@ namespace InsuranceApp
         static string mostExpensiveDevice = ""; 
         static float totalInsuranceCost = 0, priciestDevice = 0; 
 
+
+
         // Constant Variables
         static List<string> CATEGORY = new List<string>() { "Laptop", "Desktop", "Other" };
+
+        static List<string> ERRORMESSAGES = new List<string>() { "Error: Number of devices must be between 1 and 450.",
+            "Error: You must enter a valid number.", "Error: Device name can only contain letters, numbers, and spaces.",
+            "Error: Device name cannot be empty.", "Error: Please select a valid category number.",
+            "Error: Please enter a valid positive number for cost." };
 
         // Methods and Functions
         // Method to generate a unique device code
@@ -41,12 +48,13 @@ namespace InsuranceApp
                     {
                         return numDevice; // Return valid number of devices
                     }
-
-                    Console.WriteLine("Error: Number of devices must be between 1 and 450.");
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(ERRORMESSAGES[0]);
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 catch
                 {
-                    Console.WriteLine("Error: You must enter a valid number.");
+                    Console.WriteLine(ERRORMESSAGES[1]);
                 }
             }
         }
@@ -74,12 +82,12 @@ namespace InsuranceApp
                     }
                     else
                     {
-                        Console.WriteLine("Error: Device name can only contain letters, numbers, and spaces.");
+                        Console.WriteLine(ERRORMESSAGES[2]);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Error: Device name cannot be empty.");
+                    Console.WriteLine(ERRORMESSAGES[3]);
                 }
             }
         }
@@ -103,7 +111,7 @@ namespace InsuranceApp
                 }
                 else
                 {
-                    Console.WriteLine("Error: Please select a valid category number.");
+                    Console.WriteLine(ERRORMESSAGES[4]);
                 }
             }
         }
@@ -122,7 +130,7 @@ namespace InsuranceApp
                 }
                 else
                 {
-                    Console.WriteLine("Error: Please enter a valid positive number for cost.");
+                    Console.WriteLine(ERRORMESSAGES [5]);
                 }
             }
         }
@@ -137,13 +145,14 @@ namespace InsuranceApp
             int numDevice = CheckNumberOfDevices(); // Get number of devices
             int category = CheckDeviceCategory(); // Get device category
             float deviceCost = CheckDeviceCost(); // Get device cost
-
+            const float INSURANCERATE = 0.90f;
+                
             // Update counters based on the selected category
             if (category == 1) laptopCounter += numDevice;
             else if (category == 2) desktopCounter += numDevice;
             else otherCounter += numDevice;
 
-            float deviceInsurance = deviceCost * numDevice * 0.10f;
+            float deviceInsurance = deviceCost * numDevice * INSURANCERATE;
             totalInsuranceCost += deviceInsurance;
 
             if (deviceCost > priciestDevice)
@@ -170,6 +179,9 @@ namespace InsuranceApp
         // Display Summary
         static void Main(string[] args)
         {
+            CATEGORY.AsReadOnly();
+            ERRORMESSAGES.AsReadOnly();
+
             string proceed = "";
             do
             {
